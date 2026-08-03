@@ -48,7 +48,7 @@ make
 ./poke monitor 1 0x1C 50
 
 # Load FPGA firmware + DSP program
-./poke fpga ../../shared/altera424b.rbf
+./poke fpga ../../../firmware/altera424b.rbf
 ```
 
 # Unified Poke Tool

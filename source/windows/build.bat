@@ -26,6 +26,7 @@ popd
 
 set SRC=%SCRIPT_DIR%\
 set SHARED=%REPO_ROOT%\source\shared\
+set FIRMWARE=%REPO_ROOT%\firmware\
 set BUILD=%REPO_ROOT%\build\windows\
 
 REM ---- Configuration -------------------------------------------------------
@@ -150,8 +151,8 @@ if errorlevel 1 goto build_failed
 echo Driver built: %BUILD%motu424.sys
 
 REM Copy firmware and INF
-copy "%SHARED%altera424b.rbf" "%BUILD%" >nul 2>&1
-copy "%SHARED%init_sequence.bin" "%BUILD%" >nul 2>&1
+copy "%FIRMWARE%altera424b.rbf" "%BUILD%" >nul 2>&1
+copy "%FIRMWARE%init_sequence.bin" "%BUILD%" >nul 2>&1
 copy "%SRC%motu424.inf" "%BUILD%" >nul 2>&1
 
 if /i "%TARGET%"=="driver" goto build_done

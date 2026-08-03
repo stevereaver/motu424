@@ -80,10 +80,10 @@ target_link_libraries(motu424
 # Copy firmware files alongside the driver
 add_custom_command(TARGET motu424 POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy
-        ${CMAKE_SOURCE_DIR}/../shared/altera424b.rbf
+        ${CMAKE_SOURCE_DIR}/../../firmware/altera424b.rbf
         ${CMAKE_BINARY_DIR}/altera424b.rbf
     COMMAND ${CMAKE_COMMAND} -E copy
-        ${CMAKE_SOURCE_DIR}/../shared/init_sequence.bin
+        ${CMAKE_SOURCE_DIR}/../../firmware/init_sequence.bin
         ${CMAKE_BINARY_DIR}/init_sequence.bin
     COMMAND ${CMAKE_COMMAND} -E copy
         ${CMAKE_SOURCE_DIR}/motu424.inf

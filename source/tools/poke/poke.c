@@ -16,7 +16,7 @@
  *   poke write 1 0x00 0x000F2782            Write to BAR1 register 0x00
  *   poke scan  1 0x0 0x100000               Scan BAR1 for non-zero values
  *   poke monitor 1 0x1C 50                   Monitor BAR1 0x1C, 50 reads
- *   poke fpga ../shared/altera424b.rbf      Load FPGA firmware
+ *   poke fpga ../../firmware/altera424b.rbf  Load FPGA firmware
  *
  * Bar mapping:
  *   0 = BAR0 (4MB, DSP program/data memory)

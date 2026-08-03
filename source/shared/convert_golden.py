@@ -15,6 +15,12 @@ Usage:
 
 The resulting init_sequence.bin should be installed as:
   /lib/firmware/motu424/init_sequence.bin
+
+From the repo root:
+  python3 source/shared/convert_golden.py \
+      source/tools/golden/golden_dsp.c \
+      source/tools/golden/golden_sequence.c \
+      firmware/init_sequence.bin
 """
 
 import struct
@@ -74,7 +80,7 @@ def convert(input_files, output_file):
 if __name__ == '__main__':
     if len(sys.argv) < 3:
         print(f"Usage: {sys.argv[0]} <input1.c> [input2.c ...] <output.bin>")
-        print(f"Example: {sys.argv[0]} ../tools/golden/golden_dsp.c ../tools/golden/golden_sequence.c init_sequence.bin")
+        print(f"Example: {sys.argv[0]} ../tools/golden/golden_dsp.c ../tools/golden/golden_sequence.c ../../firmware/init_sequence.bin")
         sys.exit(1)
 
     inputs = sys.argv[1:-1]

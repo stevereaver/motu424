@@ -40,7 +40,7 @@ fw:
 	cd source/shared && python3 convert_golden.py \
 		../tools/golden/golden_dsp.c \
 		../tools/golden/golden_sequence.c \
-		init_sequence.bin
+		../../firmware/init_sequence.bin
 
 # ── Poke tool ───────────────────────────────────────────────────────────
 

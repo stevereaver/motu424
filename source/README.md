@@ -14,9 +14,8 @@ source/
 │   ├── motu424_fpga.c   FPGA bitstream loading (uses PAL)
 │   ├── motu424_init.c   Init sequence replay + DMA translation (uses PAL)
 │   ├── motu424_dma.c    DMA buffer management + SG setup (uses PAL)
-│   ├── convert_golden.py  Regenerates init_sequence.bin from golden trace
-│   ├── init_sequence.bin  Compact binary init sequence (7192 writes)
-│   └── altera424b.rbf     Altera FPGA bitstream firmware
+│   └── convert_golden.py  Regenerates init_sequence.bin from golden trace
+│       (firmware files live in ../../firmware/)
 ├── linux/               Linux ALSA frontend
 │   ├── motu424_linux_pal.c  Linux PAL implementation (pci_*, ioread32, etc.)
 │   ├── motu424_alsa.c       ALSA card/PCM operations
@@ -76,7 +75,8 @@ Or use Visual Studio with the WDK project templates.
 
 ```bash
 cd repo/source/shared/
-python3 convert_golden.py ../tools/golden/golden_dsp.c ../tools/golden/golden_sequence.c init_sequence.bin
+python3 convert_golden.py ../tools/golden/golden_dsp.c \
+    ../tools/golden/golden_sequence.c ../../firmware/init_sequence.bin
 ```
 
 ## Building the RE Tools

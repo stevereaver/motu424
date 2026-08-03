@@ -34,8 +34,7 @@ repo/
 │   │   ├── motu424_fpga.c  FPGA bitstream loading (uses PAL)
 │   │   ├── motu424_init.c  Init sequence replay + DMA translation
 │   │   ├── motu424_dma.c   DMA buffer management + SG setup
-│   │   ├── altera424b.rbf  Altera FPGA bitstream firmware
-│   │   └── init_sequence.bin  Golden init sequence (7192 writes)
+│   │   └── convert_golden.py  Regenerates init_sequence.bin from golden trace
 │   ├── linux/              Linux ALSA frontend
 │   │   ├── motu424_linux_pal.c  Linux PAL (pci_*, ioread32, etc.)
 │   │   ├── motu424_alsa.c       ALSA card/PCM operations
@@ -62,7 +61,12 @@ repo/
 │   ├── re/                 Reverse-engineering methodology
 │   ├── tools/              Tool documentation
 │   └── development/        Development artifacts reference
+├── firmware/               FPGA bitstream + init sequence
+│   ├── altera424b.rbf      Altera FPGA bitstream firmware (37 KB)
+│   └── init_sequence.bin   Golden init sequence, 7192 writes (65 KB)
 ├── LICENSE                 GPL-2.0
+├── Makefile                Top-level build convenience targets
+├── CHANGELOG.md            Version history
 └── README.md               This file
 ```
 
@@ -135,9 +139,13 @@ The golden init sequence is derived from a QEMU VFIO trace of the
 original Windows driver. To regenerate:
 
 ```bash
+# From the repo root:
+make fw
+
+# Or manually:
 cd source/shared/
 python3 convert_golden.py ../tools/golden/golden_dsp.c \
-    ../tools/golden/golden_sequence.c init_sequence.bin
+    ../tools/golden/golden_sequence.c ../../firmware/init_sequence.bin
 ```
 
 ## Installation

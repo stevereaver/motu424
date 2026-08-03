@@ -26,7 +26,7 @@ install: all
 
 install-fw:
 	install -d $(DESTDIR)/lib/firmware/motu424/
-	install -m 0644 ../shared/init_sequence.bin $(DESTDIR)/lib/firmware/motu424/
-	install -m 0644 ../shared/altera424b.rbf $(DESTDIR)/lib/firmware/motu424/
+	install -m 0644 ../../firmware/init_sequence.bin $(DESTDIR)/lib/firmware/motu424/
+	install -m 0644 ../../firmware/altera424b.rbf $(DESTDIR)/lib/firmware/motu424/
 
 .PHONY: all clean install install-fw

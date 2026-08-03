@@ -57,7 +57,7 @@ jobs:
 
       - name: Verify init sequence matches committed version
         run: |
-          cmp /tmp/init_sequence.bin source/shared/init_sequence.bin && \
+          cmp /tmp/init_sequence.bin firmware/init_sequence.bin && \
           echo "init_sequence.bin matches committed version" || \
           (echo "ERROR: init_sequence.bin does not match committed version" && exit 1)
 
