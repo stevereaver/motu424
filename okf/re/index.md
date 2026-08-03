@@ -26,3 +26,7 @@ generated: { by: human:reaver, at: 2026-03-08T10:30:00Z }
 ## IOCTL
 
 - [IOCTL Analysis](ioctl/ioctl_analysis.md) — Windows driver IOCTL handlers
+
+## Mixer
+
+- [CueMix FX Tracing](mixer/cuemix_tracing.md) — Mapping mixer controls to DSP memory
