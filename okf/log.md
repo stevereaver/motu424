@@ -14,7 +14,7 @@ generated: { by: human:reaver, at: 2026-03-08T10:30:00Z }
 - **Documented** hardware identification (Vendor 0x137a, Device 0x0004) and BAR layout.
 - **Captured** golden sequence of 7192 register writes via QEMU VFIO tracing.
 - **Reverse-engineered** FPGA bitbang protocol for Altera bitstream loading.
-- **Built** clean-room ALSA driver (`../source/driver/`) with FPGA load, init replay, DMA, and PCM.
+- **Built** clean-room ALSA driver (`../source/linux/`) with FPGA load, init replay, DMA, and PCM.
 - **Analyzed** Windows driver IOCTL handlers via Ghidra decompilation.
 - **Developed** poke drivers and clock sync tools for hardware exploration.
 - **Refactored** driver into cross-platform architecture: `../source/shared/` (PAL + hardware core), `../source/linux/` (ALSA), `../source/windows/` (WDF).

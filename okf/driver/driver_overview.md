@@ -6,10 +6,10 @@ tags: [driver, alsa, architecture, kernel-module]
 generated: { by: human:reaver, at: 2026-03-08T10:30:00Z }
 sources:
   - id: driver-src
-    resource: ../source/driver/
+    resource: ../source/linux/
     title: Driver source code
   - id: driver-readme
-    resource: ../source/driver/README.md
+    resource: ../source/linux/README.md
     title: Driver README
 ---
 
@@ -44,7 +44,7 @@ On `probe()`, the driver executes:
 # Build
 
 ```bash
-cd ../source/driver/
+cd ../source/linux/
 make
 sudo make install
 sudo make install-fw

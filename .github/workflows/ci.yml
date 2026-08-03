@@ -1,0 +1,180 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  # ── Linux kernel module build ─────────────────────────────────────────
+  linux:
+    name: Linux kernel module
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install kernel headers
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y linux-headers-$(uname -r) build-essential
+
+      - name: Build kernel module
+        run: |
+          cd source/linux
+          make KERNELDIR=/lib/modules/$(uname -r)/build
+
+      - name: Check module was built
+        run: |
+          test -f source/linux/snd_motu424.ko && \
+          echo "Module built: $(ls -la source/linux/snd_motu424.ko)"
+
+      - name: Upload kernel module artifact
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: snd_motu424-kernel-module
+          path: source/linux/*.ko
+          retention-days: 7
+
+  # ── Init sequence regeneration ────────────────────────────────────────
+  init-sequence:
+    name: Regenerate init sequence
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Python
+        run: sudo apt-get install -y python3
+
+      - name: Regenerate init_sequence.bin
+        run: |
+          cd source/shared
+          python3 convert_golden.py \
+            ../tools/golden/golden_dsp.c \
+            ../tools/golden/golden_sequence.c \
+            /tmp/init_sequence.bin
+
+      - name: Verify init sequence matches committed version
+        run: |
+          cmp /tmp/init_sequence.bin source/shared/init_sequence.bin && \
+          echo "init_sequence.bin matches committed version" || \
+          (echo "ERROR: init_sequence.bin does not match committed version" && exit 1)
+
+  # ── Python script syntax check ────────────────────────────────────────
+  python-lint:
+    name: Python syntax check
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check Python syntax
+        run: |
+          fail=0
+          for f in $(find source/tools -name '*.py'); do
+            if ! python3 -m py_compile "$f" 2>/dev/null; then
+              echo "SYNTAX ERROR: $f"
+              python3 -m py_compile "$f"
+              fail=1
+            fi
+          done
+          exit $fail
+
+  # ── SPDX header check ────────────────────────────────────────────────
+  spdx-check:
+    name: SPDX header check
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check all C/H files have SPDX headers
+        run: |
+          fail=0
+          for f in $(find source -name '*.c' -o -name '*.h'); do
+            if ! head -5 "$f" | grep -q 'SPDX-License-Identifier'; then
+              echo "MISSING SPDX: $f"
+              fail=1
+            fi
+          done
+          exit $fail
+
+  # ── Windows driver build ──────────────────────────────────────────────
+  windows:
+    name: Windows driver build
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Install WDK
+        run: |
+          # Install WDK via winget
+          winget install --id Microsoft.WindowsWDK.10.0.26100 --accept-package-agreements --accept-source-agreements --silent
+          # WDK installer may need a moment to register
+          Start-Sleep -Seconds 10
+
+      - name: Find WDK and MSVC paths
+        id: paths
+        run: |
+          $wdkBase = "C:\Program Files (x86)\Windows Kits\10"
+          $wdkVer = (Get-ChildItem "$wdkBase\Include" -Directory | Where-Object { $_.Name -match '^\d' } | Sort-Object Name -Descending | Select-Object -First 1).Name
+          Write-Output "WDK version: $wdkVer"
+          
+          $vsBase = "C:\Program Files (x86)\Microsoft Visual Studio\2022"
+          $vsEdition = if (Test-Path "$vsBase\Enterprise") { "Enterprise" }
+                     elseif (Test-Path "$vsBase\Professional") { "Professional" }
+                     else { "BuildTools" }
+          $msvcDir = Get-ChildItem "$vsBase\$vsEdition\VC\Tools\MSVC" -Directory | Sort-Object Name -Descending | Select-Object -First 1
+          $msvcVer = $msvcDir.Name
+          Write-Output "MSVC version: $msvcVer"
+          
+          Write-Output "WDK_BASE=$wdkBase" >> $env:GITHUB_OUTPUT
+          Write-Output "WDK_VER=$wdkVer" >> $env:GITHUB_OUTPUT
+          Write-Output "MSVC_VER=$msvcVer" >> $env:GITHUB_OUTPUT
+          Write-Output "VS_EDITION=$vsEdition" >> $env:GITHUB_OUTPUT
+
+      - name: Build Windows driver
+        env:
+          WDK_BASE_PATH: ${{ steps.paths.outputs.WDK_BASE }}
+          WDK_VERSION: ${{ steps.paths.outputs.WDK_VER }}
+          MSVC_VERSION: ${{ steps.paths.outputs.MSVC_VER }}
+        run: |
+          # Set VCVARS_PATH for the build script
+          $vsEdition = "${{ steps.paths.outputs.VS_EDITION }}"
+          $env:VCVARS_PATH = "C:\Program Files (x86)\Microsoft Visual Studio\2022\$vsEdition\VC\Auxiliary\Build\vcvarsall.bat"
+          
+          # Run the build
+          source\windows\build.bat clean
+          source\windows\build.bat
+
+      - name: Verify build output
+        run: |
+          if (Test-Path "build\windows\motu424.sys") {
+            $size = (Get-Item "build\windows\motu424.sys").Length
+            Write-Output "motu424.sys built: $size bytes"
+          } else {
+            Write-Output "ERROR: motu424.sys not found"
+            exit 1
+          }
+          if (Test-Path "build\windows\motu424_test.exe") {
+            $size = (Get-Item "build\windows\motu424_test.exe").Length
+            Write-Output "motu424_test.exe built: $size bytes"
+          } else {
+            Write-Output "ERROR: motu424_test.exe not found"
+            exit 1
+          }
+
+      - name: Upload driver artifacts
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: motu424-windows-driver
+          path: |
+            build/windows/motu424.sys
+            build/windows/motu424_test.exe
+            build/windows/motu424.inf
+            build/windows/altera424b.rbf
+            build/windows/init_sequence.bin
+          retention-days: 7

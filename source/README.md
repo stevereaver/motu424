@@ -26,7 +26,6 @@ source/
 │   ├── motu424_wdf.c        WDF driver entry + IOCTL interface
 │   ├── motu424.inf          Driver installation INF
 │   └── CMakeLists.txt       Build configuration for WDK
-├── driver/              Original monolithic driver (kept for reference)
 ├── tools/
 │   ├── drivers/         Prototype kernel drivers (motu_pci_alsa, motu_poke)
 │   ├── poke/            Userspace poke/test programs

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: GPL-2.0
+
     write_reg(fd, 0, 0xb48, 0x31bc22e6);
     write_reg(fd, 0, 0xb4c, 0x6000);
     write_reg(fd, 0, 0xb50, 0x362);

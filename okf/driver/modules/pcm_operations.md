@@ -6,7 +6,7 @@ tags: [driver, alsa, pcm, playback, capture]
 generated: { by: human:reaver, at: 2026-03-08T10:30:00Z }
 sources:
   - id: pcm-src
-    resource: ../source/driver/motu424_pcm.c
+    resource: ../source/linux/motu424_alsa.c
     title: motu424_pcm.c
 ---
 

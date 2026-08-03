@@ -46,7 +46,6 @@ repo/
 │   │   ├── motu424_test.c       Userspace test tool
 │   │   ├── motu424.inf          Driver installation INF
 │   │   └── build.bat            Build script (cl.exe + link.exe)
-│   ├── driver/             Original monolithic Linux driver (reference)
 │   └── tools/              Reverse-engineering and development tools
 │       ├── golden/         Golden register-write sequences from QEMU trace
 │       ├── poke/           Userspace poke/test programs

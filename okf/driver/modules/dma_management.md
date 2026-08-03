@@ -6,7 +6,7 @@ tags: [driver, dma, buffer, allocation]
 generated: { by: human:reaver, at: 2026-03-08T10:30:00Z }
 sources:
   - id: dma-src
-    resource: ../source/driver/motu424_dma.c
+    resource: ../source/shared/motu424_dma.c
     title: motu424_dma.c
 ---
 

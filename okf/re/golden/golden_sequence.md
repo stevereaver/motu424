@@ -55,7 +55,7 @@ translation implementation.
 # Regeneration
 
 ```bash
-cd ../source/driver/
+cd ../source/linux/
 python3 convert_golden.py \
     ../tools/golden/golden_dsp.c \
     ../tools/golden/golden_sequence.c \

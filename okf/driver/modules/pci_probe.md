@@ -6,7 +6,7 @@ tags: [driver, pci, alsa, probe]
 generated: { by: human:reaver, at: 2026-03-08T10:30:00Z }
 sources:
   - id: main-src
-    resource: ../source/driver/motu424_main.c
+    resource: ../source/linux/motu424_alsa.c
     title: motu424_main.c
 ---
 

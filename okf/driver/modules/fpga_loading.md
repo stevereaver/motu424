@@ -6,7 +6,7 @@ tags: [driver, fpga, bitbang, loading]
 generated: { by: human:reaver, at: 2026-03-08T10:30:00Z }
 sources:
   - id: fpga-src
-    resource: ../source/driver/motu424_fpga.c
+    resource: ../source/shared/motu424_fpga.c
     title: motu424_fpga.c
   - id: bitbang-trace
     resource: ../source/tools/golden/golden_fpga_bitbang.c

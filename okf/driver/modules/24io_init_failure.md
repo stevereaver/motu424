@@ -113,7 +113,7 @@ A new `motu424_full_init()` function chains all initialization steps:
 5. **Post-init port loop** — 32 iterations of 4-port configuration
 6. **Sync polling** — wait for clock lock (0x13 status)
 
-Both the old `../source/driver/` and new `../source/shared/` + `../source/linux/`
+Both the old `../source/linux/` and new `../source/shared/` + `../source/linux/`
 code paths now call `motu424_full_init()`.
 
 # See Also

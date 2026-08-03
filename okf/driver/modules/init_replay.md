@@ -6,7 +6,7 @@ tags: [driver, init, replay, dma-translation]
 generated: { by: human:reaver, at: 2026-03-08T10:30:00Z }
 sources:
   - id: init-src
-    resource: ../source/driver/motu424_init.c
+    resource: ../source/shared/motu424_init.c
     title: motu424_init.c
   - id: smart-replay
     resource: ../source/tools/replay/smart_replay.c
@@ -59,7 +59,7 @@ prevent driver loading.
 # Regeneration
 
 ```bash
-cd ../source/driver/
+cd ../source/linux/
 python3 convert_golden.py ../tools/golden/golden_dsp.c ../tools/golden/golden_sequence.c init_sequence.bin
 ```
 
