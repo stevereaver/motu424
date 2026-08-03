@@ -1,0 +1,26 @@
+# CODEOWNERS for the MOTU PCI-424 driver project
+#
+# Default owner for everything not explicitly listed below
+*           @stevereaver
+
+# Shared hardware core — requires understanding of FPGA/DSP interaction
+/source/shared/   @stevereaver
+
+# Linux ALSA frontend — requires kernel/ALSA knowledge
+/source/linux/    @stevereaver
+
+# Windows WDF frontend — requires WDF/WDM knowledge
+/source/windows/  @stevereaver
+
+# Firmware — changes need careful review
+/firmware/        @stevereaver
+
+# Documentation (OKF bundle)
+/okf/             @stevereaver
+
+# CI and build system
+/.github/         @stevereaver
+/Makefile         @stevereaver
+
+# Reverse-engineering tools
+/source/tools/    @stevereaver

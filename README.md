@@ -161,9 +161,17 @@ aplay -l
 
 ### Windows
 
-1. Enable test signing: `bcdedit /set testsigning on` (reboot required)
+The driver is not WHQL-signed, so you must enable test signing:
+
+1. Enable test signing (elevated prompt, then reboot):
+   ```
+   bcdedit /set testsigning on
+   ```
 2. Run `build\windows\install.bat` as Administrator
 3. Verify in Device Manager under "Sound, video and game controllers"
+
+See [Windows Build Guide](okf/driver/modules/windows_build.md) for
+detailed signing, certificate creation, and troubleshooting instructions.
 
 ## Testing
 

@@ -93,11 +93,75 @@ The Windows driver consists of:
 
 # Installation
 
-1. Enable test signing (requires reboot):
+## Driver Signing
+
+Windows requires kernel-mode drivers to be signed. Since this is an
+open-source project without a WHQL signature, you must enable **test
+signing** mode to load the driver.
+
+### Enabling Test Signing
+
+Test signing allows loading drivers signed with a test certificate
+(instead of a Microsoft-trusted WHQL certificate). This affects the
+entire system, so a reboot is required.
+
+1. Open an **elevated Command Prompt** (Run as Administrator)
+2. Enable test signing:
    ```
    bcdedit /set testsigning on
+   ```
+3. Reboot:
+   ```
    shutdown /r /t 0
    ```
+4. After reboot, the desktop will show "Test Mode" in the bottom-right
+   corner. This is normal.
+
+To disable test signing later:
+```
+bcdedit /set testsigning off
+shutdown /r /t 0
+```
+
+### Creating a Test Certificate
+
+If you need to sign the driver yourself (e.g., for distribution within
+your organization), create a test certificate:
+
+```powershell
+# Create a self-signed test certificate
+$cert = New-SelfSignedCertificate `
+    -Type CodeSigningCert `
+    -Subject "CN=MOTU424 Test Signing" `
+    -CertStoreLocation "Cert:\LocalMachine\My"
+
+# Export it
+$pwd = ConvertTo-SecureString -String "password" -Force -AsPlainText
+Export-PfxCertificate -Cert $cert -FilePath motu424_test.pfx -Password $pwd
+
+# Trust it (add to root and trusted publisher)
+Import-PfxCertificate -FilePath motu424_test.pfx -Password $pwd `
+    -CertStoreLocation "Cert:\LocalMachine\Root"
+Import-PfxCertificate -FilePath motu424_test.pfx -Password $pwd `
+    -CertStoreLocation "Cert:\LocalMachine\TrustedPublisher"
+```
+
+Then sign the driver:
+```
+signtool sign /a /v /fd SHA256 /f motu424_test.pfx /p password build\windows\motu424.sys
+```
+
+### Production / WHQL Signing
+
+For production deployment without test signing, the driver must be
+WHQL-signed through the Microsoft Partner Center. This requires a
+hardware submission and is beyond the scope of this document. See
+[Microsoft's WHQL documentation](https://learn.microsoft.com/en-us/windows-hardware/drivers/install/driver-signing).
+
+## Installing the Driver
+
+1. Ensure test signing is enabled (see above) and the system has been
+   rebooted.
 
 2. Run the installer as Administrator:
    ```
@@ -108,6 +172,21 @@ The Windows driver consists of:
 3. Or use PowerShell:
    ```
    .\install.ps1
+   ```
+
+4. Verify in Device Manager:
+   - Open `devmgmt.msc`
+   - Look under "Sound, video and game controllers" for "MOTU PCI-424"
+   - If the device has a yellow exclamation mark, check the driver
+     status for error codes
+
+5. If the driver fails to load with error 39 (driver signing):
+   ```
+   # Verify test signing is enabled:
+   bcdedit /enum | findstr testsigning
+
+   # Should show: testsigning             Yes
+   # If not, enable it and reboot again.
    ```
 
 # Testing
