@@ -48,7 +48,7 @@ repo/
 │   │   └── build.bat            Build script (cl.exe + link.exe)
 │   └── tools/              Reverse-engineering and development tools
 │       ├── golden/         Golden register-write sequences from QEMU trace
-│       ├── poke/           Userspace poke/test programs
+│       ├── poke/           Unified poke tool (read/write/scan/monitor/fpga)
 │       ├── replay/         Trace replay tools
 │       ├── clock_sync/     Clock synchronization tools
 │       ├── drivers/        Prototype kernel modules
@@ -87,11 +87,17 @@ allocation, IRQ, firmware loading, timing, logging, and spinlocks.
 ### Linux Driver
 
 Prerequisites:
-- Linux kernel headers (for your kernel version)
+- Linux kernel headers (`linux-headers-$(uname -r)` on Debian/Ubuntu,
+  `kernel-devel` on Fedora)
 - GCC
 - make
 
 ```bash
+# From the repo root:
+make linux              # Build the kernel module
+sudo make linux-install # Install module + firmware
+
+# Or manually:
 cd source/linux/
 make
 sudo make install

@@ -9,8 +9,11 @@ sources:
     resource: ../source/tools/drivers/motu_poke_driver.c
     title: motu_poke_driver.c
   - id: poke-src
-    resource: ../source/tools/poke/
-    title: Poke test programs
+    resource: ../source/tools/poke/poke.c
+    title: Unified poke tool
+  - id: poke-archive
+    resource: ../source/tools/poke/archive/
+    title: Archived poke test programs
 ---
 
 # Overview
@@ -24,27 +27,51 @@ verify hardware behavior.
 
 ```bash
 # Load the poke driver
-insmod motu_poke_driver.ko
+cd source/tools/drivers
+make
+sudo insmod motu_poke_driver.ko
 
-# Write to a register
-echo "BAR1 0x0000 0x00000007" > /proc/motu_poke
+# Build the poke tool
+cd ../poke
+make
 
 # Read a register
-cat /proc/motu_poke
+./poke read 1 0x00
+
+# Write a register
+./poke write 1 0x00 0x000F2782
+
+# Scan a BAR for non-zero values
+./poke scan 1 0x0 0x100000
+
+# Monitor a register
+./poke monitor 1 0x1C 50
+
+# Load FPGA firmware + DSP program
+./poke fpga ../../shared/altera424b.rbf
 ```
 
-# Test Programs
+# Unified Poke Tool
 
-Multiple userspace poke test programs were developed to test specific
-hardware behaviors:
+The `poke.c` tool consolidates all earlier poke test programs into a
+single tool with subcommands: `read`, `write`, `scan`, `monitor`, and
+`fpga`. See `source/tools/poke/README.md` for full documentation.
 
-| Program           | Purpose                              |
-|-------------------|--------------------------------------|
-| `poke_test.c`     | Basic register read/write            |
-| `poke_fpga.c`     | Test FPGA bitbang loading            |
-| `motu_test_bar0.c`| Test BAR0 DSP memory access          |
-| `motu_test_regs.c`| Test BAR1 register access            |
-| `motu_test_amcc.c`| Test AMCC-specific registers         |
+# Archived Programs
+
+Earlier iterative versions are in `source/tools/poke/archive/`:
+
+| Program            | Purpose                              |
+|--------------------|--------------------------------------|
+| `poke_test.c`      | Basic register read/write (no bar)   |
+| `poke_test3.c`     | Added bar support                    |
+| `poke_test10.c`    | Clock/rate fuzzing                    |
+| `poke_test11.c`    | BAR1 mixer RAM scan                   |
+| `poke_fpga.c`      | FPGA bitbang + DSP load (standalone)  |
+| `motu_poke.c`     | mmap-based BAR1 monitor               |
+| `motu_test_bar0.c`| mmap-based BAR0 DSP memory test       |
+| `motu_test_regs.c`| mmap-based BAR1 register test          |
+| `motu_test_amcc.c`| mmap-based AMCC register test         |
 
 # See Also
 

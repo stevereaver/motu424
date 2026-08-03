@@ -28,7 +28,7 @@ source/
 │   └── CMakeLists.txt       Build configuration for WDK
 ├── tools/
 │   ├── drivers/         Prototype kernel drivers (motu_pci_alsa, motu_poke)
-│   ├── poke/            Userspace poke/test programs
+│   ├── poke/            Unified poke tool (read/write/scan/monitor/fpga)
 │   ├── replay/          Trace replay tools (smart_replay, replay_trace)
 │   ├── clock_sync/      Clock synchronization and sync-finder tools
 │   ├── analysis/        Python scripts for analyzing disassembly/traces
