@@ -1,0 +1,79 @@
+; SPDX-License-Identifier: GPL-2.0
+;
+; motu424.inf - Windows driver installation file for MOTU PCI-424
+;
+; Targets: Windows 10 x64, Windows 11 x64
+; Driver model: WDF (KMDF)
+; Hardware: MOTU PCI-424 (Vendor 0x137a, Device 0x0003/0x0004/0x0005)
+
+[Version]
+Signature   = $CHICAGO$
+Class       = Media
+ClassGuid   = {4D36E96C-E325-11CE-BFC1-08002BE10318}
+Provider    = %MOTU%
+DriverVer   = 03/08/2026,1.0.0.0
+CatalogFile = motu424.cat
+PnpLockdown = 1
+
+[Manufacturer]
+%MOTU% = DeviceList, NTamd64
+
+[DeviceList.NTamd64]
+%MOTU424% = MOTU424_Install, PCI\VEN_137A&DEV_0003
+%MOTU424% = MOTU424_Install, PCI\VEN_137A&DEV_0004
+%MOTU424% = MOTU424_Install, PCI\VEN_137A&DEV_0005
+
+; ---- Installation sections ----
+
+[SourceDisksNames]
+1 = %DiskName%,,,""
+
+[SourceDisksFiles]
+motu424.sys = 1,,
+altera424b.rbf = 1,,
+init_sequence.bin = 1,,
+
+[DestinationDirs]
+DefaultDestDir = 13          ; DriverStore
+FirmwareCopyFiles = 13,motu424
+
+[MOTU424_Install.NTamd64]
+CopyFiles = DriverCopyFiles, FirmwareCopyFiles
+
+[DriverCopyFiles]
+motu424.sys,,,0x00000040     ; COPYFLG_FORCE_FILE_IN_USE
+
+[FirmwareCopyFiles]
+altera424b.rbf,,,0x00000040
+init_sequence.bin,,,0x00000040
+
+[MOTU424_Install.NTamd64.Services]
+AddService = motu424,0x00000002,MOTU424_Service
+
+[MOTU424_Service]
+DisplayName    = %MOTU424%
+ServiceType    = 1            ; SERVICE_KERNEL_DRIVER
+StartType      = 3            ; SERVICE_DEMAND_START
+ErrorControl   = 1            ; SERVICE_ERROR_NORMAL
+ServiceBinary  = %13%\motu424.sys
+
+[MOTU424_Install.NTamd64.HW]
+AddReg = MOTU424_HardwareAddReg
+
+[MOTU424_HardwareAddReg]
+HKR,,FriendlyName,,%MOTU424%
+
+; ---- WDF configuration ----
+
+[MOTU424_Install.NTamd64.Wdf]
+KmdfService = motu424, MOTU424_WdfSection
+
+[MOTU424_WdfSection]
+KmdfLibraryVersion = 1.15
+
+; ---- String definitions ----
+
+[Strings]
+MOTU      = "MOTU"
+MOTU424   = "MOTU PCI-424 Audio"
+DiskName  = "MOTU PCI-424 Driver Installation Disk"

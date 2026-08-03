@@ -1,0 +1,26 @@
+# Auto-detect text files and normalize line endings
+* text=auto
+
+# Source files
+*.c text
+*.h text
+*.py text
+*.sh text
+*.bat text
+*.md text
+*.txt text
+*.inf text
+*.cmake text
+Makefile text
+CMakeLists.txt text
+
+# Binary files
+*.bin binary
+*.rbf binary
+*.sys binary
+*.exe binary
+*.obj binary
+*.lib binary
+*.pdb binary
+*.cat binary
+*.ko binary

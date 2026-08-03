@@ -1,0 +1,40 @@
+# Build output
+build/
+*.o
+*.obj
+*.ko
+*.mod
+*.mod.o
+*.mod.c
+*.cmd
+.tmp_versions
+Module.symvers
+modules.order
+
+# Windows build artifacts
+*.sys
+*.pdb
+*.ilk
+*.exp
+*.lib
+*.cat
+
+# IDE / Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Large generated files (regenerate from traces)
+source/tools/golden/golden_fpga_bitbang.c
+
+# OS-specific
+*.log
